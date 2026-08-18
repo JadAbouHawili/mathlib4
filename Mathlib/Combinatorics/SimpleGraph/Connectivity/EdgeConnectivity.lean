@@ -144,23 +144,41 @@ lemma isBridge_iff_not_isEdgeReachable_two (huv : G.Adj u v) :
 alias isBridge_iff_adj_and_not_isEdgeConnected_two := isBridge_iff_not_isEdgeReachable_two
 
 lemma isEdgeReachable_two : G.IsEdgeReachable 2 u v ↔ ∀ e, (G.deleteEdges {e}).Reachable u v := by
-  #check one_ne_zero (α := ℕ∞)
-  #check isEdgeReachable_add_one
+  /-
+  -- when edgereachable take natural numbers this is solution
   simp only [ne_eq, one_ne_zero, not_false_eq_true, isEdgeReachable_add_one, isEdgeReachable_one]
-  constructor
-  intro h
-  have := (isEdgeReachable_add_one (k := 1) (one_ne_zero)).mp h
-  unfold IsEdgeReachable at this ; simp at this 
-  assumption
+
+  -/
+  --simp  [ one_ne_zero' ℕ∞ , G.isEdgeReachable_add_one (u := u) (v := v) ,  one_add_one_eq_two]
+  have this2 :=  G.isEdgeReachable_add_one (u := u) (v := v) (one_ne_zero)
+  simp at this2
+  have : 1 + 1 = (2 : ℕ∞) := by
+    exact one_add_one_eq_two
+  have : 1+1 =2 := by
+    simp only [Nat.reduceAdd]
+  simp_all only [isEdgeReachable_one]
+  --simp only [this3] at this2
+  --simp at this2 ; assumption
+
+
+  --rw [ isEdgeReachable_add_one this]
+--  simp [isEdgeReachable_add_one this, isEdgeReachable_one ,   one_add_one_eq_two ]
+--  --#check isEdgeReachable_one
+--  simp only [
+--  ne_eq (α := ℕ∞),  one_ne_zero' ℕ∞,  one_ne_zero (α := ℕ∞), not_false_eq_true, isEdgeReachable_add_one, isEdgeReachable_one] 
+--
+
 
    
-  simp [isEdgeReachable_add_one] at h
 
 /-- A graph is 2-edge-connected iff it has no bridge. -/
 -- TODO: This should be `G.IsEdgeConnected 2 ↔ ∀ e, ¬G.IsBridge e` after
 -- https://github.com/leanprover-community/mathlib4/pull/32583
 lemma isEdgeConnected_two : G.IsEdgeConnected 2 ↔ ∀ e, (G.deleteEdges {e}).Preconnected := by
-  simp [isEdgeConnected_add_one]
+  have : 1 + 1 = (2 : ℕ∞) := by
+    exact one_add_one_eq_two
+  have this2 :=  G.isEdgeConnected_add_one (one_ne_zero)
+  simp_all
 
 lemma exists_adj_isEdgeReachable_two (hne : u ≠ v) (h : G.IsEdgeReachable 2 u v) :
     ∃ w : V, G.Adj u w ∧ G.IsEdgeReachable 2 u w := by
