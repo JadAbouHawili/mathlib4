@@ -25,7 +25,7 @@ This file defines k-edge-connectivity for simple graphs.
 
 namespace SimpleGraph
 
-variable {V : Type*} {G H : SimpleGraph V} {k l : ℕ} {u v w x y : V}
+variable {V : Type*} {G H : SimpleGraph V} {k l : ℕ∞} {u v w x y : V}
 
 variable (G k u v) in
 /-- Two vertices are `k`-edge-reachable if they remain reachable after removing strictly fewer than
@@ -75,7 +75,7 @@ lemma isEdgeConnected_one : G.IsEdgeConnected 1 ↔ G.Preconnected := by
   simp [IsEdgeConnected, Preconnected]
 
 lemma IsEdgeReachable.reachable (hk : k ≠ 0) (huv : G.IsEdgeReachable k u v) : G.Reachable u v :=
-  isEdgeReachable_one.mp (huv.anti (Nat.one_le_iff_ne_zero.mpr hk))
+  isEdgeReachable_one.mp (huv.anti (by exact Order.one_le_iff_ne_zero.mpr hk))
 
 @[nontriviality]
 lemma IsEdgeReachable.of_subsingleton [Subsingleton V] : G.IsEdgeReachable k u v :=
@@ -96,7 +96,7 @@ lemma IsEdgeReachable.le_degree [Fintype (G.neighborSet u)] (h : G.IsEdgeReachab
     (huv : u ≠ v) : k ≤ G.degree u := by
   classical
   by_contra! hh
-  rw [← card_incidenceSet_eq_degree, ← ENat.natCast_lt_natCast, Set.coe_fintypeCard] at hh
+  rw [← card_incidenceSet_eq_degree, Set.coe_fintypeCard] at hh
   obtain ⟨w, _⟩ := h hh |>.exists_isPath
   simpa using w.adj_snd <| mt Walk.Nil.eq huv
 
@@ -144,7 +144,17 @@ lemma isBridge_iff_not_isEdgeReachable_two (huv : G.Adj u v) :
 alias isBridge_iff_adj_and_not_isEdgeConnected_two := isBridge_iff_not_isEdgeReachable_two
 
 lemma isEdgeReachable_two : G.IsEdgeReachable 2 u v ↔ ∀ e, (G.deleteEdges {e}).Reachable u v := by
-  simp [isEdgeReachable_add_one]
+  #check one_ne_zero (α := ℕ∞)
+  #check isEdgeReachable_add_one
+  simp only [ne_eq, one_ne_zero, not_false_eq_true, isEdgeReachable_add_one, isEdgeReachable_one]
+  constructor
+  intro h
+  have := (isEdgeReachable_add_one (k := 1) (one_ne_zero)).mp h
+  unfold IsEdgeReachable at this ; simp at this 
+  assumption
+
+   
+  simp [isEdgeReachable_add_one] at h
 
 /-- A graph is 2-edge-connected iff it has no bridge. -/
 -- TODO: This should be `G.IsEdgeConnected 2 ↔ ∀ e, ¬G.IsBridge e` after
