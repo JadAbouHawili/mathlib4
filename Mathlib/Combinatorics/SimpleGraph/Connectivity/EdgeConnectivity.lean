@@ -188,36 +188,25 @@ theorem isEdgeConnected_top_iff_forall_finite :
 
 theorem isEdgeReachable_top_iff_forall_nat :
     G.IsEdgeReachable ⊤ u v ↔ ∀ n : ℕ, G.IsEdgeReachable n u v := by
-  --rw [isEdgeReachable_top_iff_forall_finite]
-  --unfold IsEdgeReachable
   constructor
-  intro h
-  intro n
-  intro s h'
-  have : s.encard < ⊤ := by
-    exact lt_top_of_lt h'
-  have : s.Finite := by
-    #check Set.encard_lt_top_iff 
-    exact Set.encard_lt_top_iff.mp this 
-  (expose_names; exact Reachable.symm (id (IsEdgeReachable.symm h) this_1)) 
+  · intro h n s h'
+    have : s.Finite := Set.finite_of_encard_lt_coe h'
+    rw [isEdgeReachable_top_iff_forall_finite] at h
+    exact @h s this
 
-  intro h
-  intro s h'
+  intro h s h'
   have : s.Finite := by
-    #check Set.encard_lt_top_iff
     exact Set.encard_lt_top_iff.mp h'
   have this2 := this
   cases this
   expose_names
-  #check IsEdgeReachable
   have := @h (n + 1) s 
-  simp at this
+  simp only [Nat.cast_add, Nat.cast_one] at this
   apply this
   have : Finite s := by
     exact Set.Finite.to_subtype this2
   have : Fintype s := by
     exact this2.fintype
-  #check Set.Finite.cast_ncard_eq
   have : Fintype.card ↑s = s.ncard := by
     exact Set.fintypeCard_eq_ncard s
   have : s.ncard = n := by
@@ -225,29 +214,21 @@ theorem isEdgeReachable_top_iff_forall_nat :
       s.ncard = Fintype.card ↑s := this.symm
       _ = Fintype.card (Fin n) := Fintype.card_congr a
       _ = n := Fintype.card_fin n
-  
+
   have : s.encard = n := by
-    rw [←this] 
-    #check Set.Finite.cast_ncard_eq
-    simp?
-   -- #check Set.encard_coe_eq_coe_finsetCard
-   -- #check Set.ncard
-   -- simp
-   -- rw [Set.encard_eq_coe_fintype_card]
-   -- rw [Fintype.card_congr a]
-   -- exact_mod_cast Nat.lt_succ_self n
-   -- rw [Set.encard_coe_eq_coe_finsetCard]
-   -- rw [Set.encard_eq_coe_set_ncard]
-   -- rw [Fintype.card_congr a]
-   -- exact_mod_cast Nat.lt_succ_self n
-   -- #check Fintype.card_congr
-   -- simpa using Fintype.card_congr a
-   -- #check Set.ncard_eq_toFinset_card s
-   -- simp [Set.ncard_eq_toFinset_card s]
-   -- simpa [Set.ncard_eq_toFinset_card] using Nat.lt_succ_self n
-   -- sorry
+    rw [←this]
+    simp only [Set.coe_ncard_eq_encard]
   rw [this]
   exact ENat.natCast_lt_succ
+
+#check Set.Finite.cast_ncard_eq
+#check Set.encard_coe_eq_coe_finsetCard
+#check Set.ncard
+#check Set.encard_coe_eq_coe_finsetCard
+#check Fintype.card_congr
+#check Set.ncard_eq_toFinset_card
+#check Set.ncard_eq_toFinset_card
+#check Set.finite_of_encard_lt_coe
 
 theorem isEdgeConnected_top_iff_forall_nat :
     G.IsEdgeConnected ⊤ ↔ ∀ n : ℕ, G.IsEdgeConnected n := by
