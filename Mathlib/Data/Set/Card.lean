@@ -1430,3 +1430,18 @@ theorem Set.ncard_le_ncard_image_add_one_iff {α β : Type*} (s : Set α) [Finit
   simpa [Subtype.ext_iff, ← (Set.image_injective.mpr Subtype.val_injective).eq_iff,
      Set.image_insert_eq, Set.image_singleton] using
       (Set.surjective_mapsTo_image_restrict f s).card_le_card_add_one_iff
+
+theorem finite_of_encard_lt {α : Type} {s : Set α} {n : ℕ} : s.encard < n → s.Finite := by
+  intro h'
+  /-
+  -- shorter proof
+  have : s.encard ≤ n - 1 := by
+    exact ENat.le_sub_one_of_lt h'
+  exact Set.finite_of_encard_le_coe this 
+  -/
+  have : s.encard < ⊤ := by
+    exact lt_top_of_lt h'
+  have : s.Finite := by
+    #check Set.encard_lt_top_iff 
+    exact Set.encard_lt_top_iff.mp this 
+  exact Set.finite_coe_iff.mp this
