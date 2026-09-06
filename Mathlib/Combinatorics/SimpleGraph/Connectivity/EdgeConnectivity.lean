@@ -200,7 +200,7 @@ theorem isEdgeReachable_top_iff_forall_nat :
   -- necessary else Fintype.card doesn't synthesize
   have : Fintype s := by
     exact this2.fintype
-  have := @h (n + 1) s 
+  have := @h (n + 1) s
   apply this
   have : Fintype.card ↑s = s.ncard := by
     exact Set.fintypeCard_eq_ncard s
