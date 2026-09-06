@@ -158,7 +158,6 @@ alias isEdgeConnected_two := isEdgeConnected_two_iff_forall_preconnected
 theorem isEdgeConnected_two_iff_forall_not_isBridge : G.IsEdgeConnected 2 ↔ ∀ e, ¬G.IsBridge e := by
   rw [isEdgeConnected_two_iff_forall_preconnected]
   refine ⟨fun h ↦ Sym2.ind (h _ · · |> ·), fun h ↦ Sym2.ind fun x y ↦ ?_⟩
-  nontriviality V
   have : G.Preconnected := (Not.imp_symm .of_not_reachable <| h s(·, ·))
   exact this.connected_deleteEdges_of_not_isBridge (h s(x,y)) |>.preconnected
 
