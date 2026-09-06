@@ -204,8 +204,7 @@ theorem isEdgeReachable_top_iff_forall_nat :
   have : s.encard = n := by
     rw [←this]
     simp only [Set.coe_ncard_eq_encard]
-  rw [this]
-  exact ENat.natCast_lt_succ
+  simp [this, ENat.natCast_lt_succ]
 
 theorem isEdgeConnected_top_iff_forall_nat :
     G.IsEdgeConnected ⊤ ↔ ∀ n : ℕ, G.IsEdgeConnected n := by
