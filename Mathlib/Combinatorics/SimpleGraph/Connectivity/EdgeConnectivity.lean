@@ -183,8 +183,7 @@ theorem isEdgeReachable_top_iff_forall_finite :
 
 theorem isEdgeConnected_top_iff_forall_finite :
     G.IsEdgeConnected ⊤ ↔ ∀ ⦃s⦄, s.Finite → (G.deleteEdges s).Preconnected := by
-  simp only [Preconnected, IsEdgeConnected, isEdgeReachable_top_iff_forall_finite]
-  grind
+  simp_rw [isEdgeConnected_iff, Set.encard_lt_top_iff]
 
 theorem isEdgeReachable_top_iff_forall_nat :
     G.IsEdgeReachable ⊤ u v ↔ ∀ n : ℕ, G.IsEdgeReachable n u v := by
