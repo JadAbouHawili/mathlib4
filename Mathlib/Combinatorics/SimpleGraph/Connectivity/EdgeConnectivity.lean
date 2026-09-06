@@ -183,11 +183,7 @@ theorem isEdgeConnected_top_iff_forall_finite :
 
 theorem isEdgeReachable_top_iff_forall_nat :
     G.IsEdgeReachable ⊤ u v ↔ ∀ n : ℕ, G.IsEdgeReachable n u v := by
-  constructor
-  · intro h n s h'
-    rw [isEdgeReachable_top_iff_forall_finite] at h
-    exact @h s (Set.finite_of_encard_lt_coe h')
-  intro h s h'
+  refine ⟨fun h _ ↦ h.anti le_top, fun h s h' ↦ ?_⟩
   have : s.Finite := Set.encard_lt_top_iff.mp h'
   have this2 := this
   cases this
