@@ -173,9 +173,8 @@ lemma exists_adj_isEdgeReachable_two (hne : u ≠ v) (h : G.IsEdgeReachable 2 u 
     exact Set.encard_le_one_iff_subsingleton.mp (Order.le_of_lt_succ hs)
 
 theorem isEdgeReachable_top_iff_forall_finite :
-    G.IsEdgeReachable ⊤ u v ↔ ∀ ⦃s⦄, s.Finite → (G.deleteEdges s).Reachable u v :=
-  ⟨fun h s h' ↦ @h s (Set.Finite.encard_lt_top h'),
-    fun h s lt_top ↦ @h s (Set.encard_lt_top_iff.mp lt_top)⟩
+    G.IsEdgeReachable ⊤ u v ↔ ∀ ⦃s⦄, s.Finite → (G.deleteEdges s).Reachable u v := by
+  simp_rw [IsEdgeReachable, Set.encard_lt_top_iff]
 
 theorem isEdgeConnected_top_iff_forall_finite :
     G.IsEdgeConnected ⊤ ↔ ∀ ⦃s⦄, s.Finite → (G.deleteEdges s).Preconnected := by
