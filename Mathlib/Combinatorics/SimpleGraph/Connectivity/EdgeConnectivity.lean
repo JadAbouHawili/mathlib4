@@ -185,6 +185,7 @@ theorem isEdgeReachable_top_iff_forall_nat :
     G.IsEdgeReachable ⊤ u v ↔ ∀ n : ℕ, G.IsEdgeReachable n u v := by
   constructor
   · intro h n s h'
+    #check h.anti
     rw [isEdgeReachable_top_iff_forall_finite] at h
     exact @h s (Set.finite_of_encard_lt_coe h')
   intro h s h'
@@ -214,8 +215,7 @@ theorem isEdgeReachable_top_iff_forall_nat :
 
 theorem isEdgeConnected_top_iff_forall_nat :
     G.IsEdgeConnected ⊤ ↔ ∀ n : ℕ, G.IsEdgeConnected n := by
-  unfold IsEdgeConnected
-  simp only [isEdgeReachable_top_iff_forall_nat]
+  simp [IsEdgeConnected, isEdgeReachable_top_iff_forall_nat]
   grind
 
 /-!
