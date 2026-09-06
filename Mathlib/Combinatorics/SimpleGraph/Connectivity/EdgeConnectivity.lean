@@ -190,45 +190,32 @@ theorem isEdgeReachable_top_iff_forall_nat :
     G.IsEdgeReachable ⊤ u v ↔ ∀ n : ℕ, G.IsEdgeReachable n u v := by
   constructor
   · intro h n s h'
-    have : s.Finite := Set.finite_of_encard_lt_coe h'
     rw [isEdgeReachable_top_iff_forall_finite] at h
-    exact @h s this
-
+    exact @h s (Set.finite_of_encard_lt_coe h')
   intro h s h'
-  have : s.Finite := by
-    exact Set.encard_lt_top_iff.mp h'
+  have : s.Finite := Set.encard_lt_top_iff.mp h'
   have this2 := this
   cases this
   expose_names
-  have := @h (n + 1) s 
-  simp only [Nat.cast_add, Nat.cast_one] at this
-  apply this
-  have : Finite s := by
-    exact Set.Finite.to_subtype this2
+  -- necessary else Fintype.card doesn't synthesize
   have : Fintype s := by
     exact this2.fintype
+  have := @h (n + 1) s 
+  apply this
   have : Fintype.card ↑s = s.ncard := by
     exact Set.fintypeCard_eq_ncard s
+  -- possibly extracted into a lemma
+  -- ↑s ≃ Fin n → s.ncard = n
   have : s.ncard = n := by
     calc
       s.ncard = Fintype.card ↑s := this.symm
       _ = Fintype.card (Fin n) := Fintype.card_congr a
       _ = n := Fintype.card_fin n
-
   have : s.encard = n := by
     rw [←this]
     simp only [Set.coe_ncard_eq_encard]
   rw [this]
   exact ENat.natCast_lt_succ
-
-#check Set.Finite.cast_ncard_eq
-#check Set.encard_coe_eq_coe_finsetCard
-#check Set.ncard
-#check Set.encard_coe_eq_coe_finsetCard
-#check Fintype.card_congr
-#check Set.ncard_eq_toFinset_card
-#check Set.ncard_eq_toFinset_card
-#check Set.finite_of_encard_lt_coe
 
 theorem isEdgeConnected_top_iff_forall_nat :
     G.IsEdgeConnected ⊤ ↔ ∀ n : ℕ, G.IsEdgeConnected n := by
