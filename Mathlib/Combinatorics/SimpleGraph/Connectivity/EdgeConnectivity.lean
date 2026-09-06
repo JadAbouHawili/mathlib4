@@ -201,9 +201,7 @@ theorem isEdgeReachable_top_iff_forall_nat :
       s.ncard = Fintype.card ↑s := this.symm
       _ = Fintype.card (Fin n) := Fintype.card_congr a
       _ = n := Fintype.card_fin n
-  have : s.encard = n := by
-    rw [←this]
-    simp only [Set.coe_ncard_eq_encard]
+  have : s.encard = n := by simp [← this, s.coe_ncard_eq_encard]
   simp [this, ENat.natCast_lt_succ]
 
 theorem isEdgeConnected_top_iff_forall_nat :
